@@ -13,9 +13,11 @@ main:
 	BL	stdio_init_all	@ initialize uart or usb
 	LDR R5, =my_array
 	MOV R1, #5
+loop:
+	LDR R5, =my_array
+	MOV R1, #5
 	BL sum
 	MOV R2, R0
-loop:
 	LDR	R0, =labelSum	@ load address of helloworld string
 	MOV R1, R2
 	BL	printf			@ Call pico_printf
@@ -28,6 +30,7 @@ sum:	#Address of array in R0, length of array in R1
 		LDR R4,[R0]	@Load element into R4
 		ADD R3, R3, R4
 		CMP R3, R2
+		ADD R0, R0, #4
 		BLE array_loop
 	MOV R0, R3
 	BX LR
@@ -38,4 +41,5 @@ sum:	#Address of array in R0, length of array in R1
 .data
 .align  4	@ necessary alignment
 labelSum: .asciz   "Sum %d\n"
+.align  4	@ necessary alignment
 my_array: .word 12, 34, 54, 76, 89
