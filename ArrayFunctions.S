@@ -27,12 +27,12 @@ sum:	#Address of array in R0, length of array in R1
 	MOV R2, #0	@R2 as loop counter
 	MOV R3, #0  @R3 used as sum
 	array_loop:
-		ADD R2, R2, #1 @Increment loop counter
-		LDR R4,[R0]	@Load element into R4
-		ADD R3, R3, R4
-		CMP R3, R2
-		ADD R0, R0, #4
-		BLE array_loop
+		ADD R2, R2, #1 	@Increment loop counter
+		LDR R4,[R0]		@Load element into R4
+		ADD R3, R3, R4 	@Add current array element to sum
+		ADD R0, R0, #4	@Increment address to reach next element
+		CMP R1, R2		@Check if loop counter = lengt of array
+		BNE array_loop
 	MOV R0, R3
 	BX LR
 
