@@ -6,6 +6,8 @@
 @ R1 - second parameter to printf
 @
 
+.EQU sleep_time, 5000
+
 .thumb_func		    	@ Necessary because sdk uses BLX
 .global main	        @ Provide program starting address to linker
 
@@ -24,23 +26,28 @@ loop:
 	B	loop			@ loop forever
 
 sum:	#Address of array in R0, length of array in R1
+	LDR R0, =debugMessage
+	BL printf
+	LDR R0, =sleep_time
+	BL sleep_ms
+	
+	MOV R5, R0
 	MOV R2, #0	@R2 as loop counter
 	MOV R3, #0  @R3 used as sum
 	array_loop:
 		ADD R2, R2, #1 	@Increment loop counter
-		LDR R4,[R0]		@Load element into R4
+		LDR R4,[R5]		@Load element into R4
 		ADD R3, R3, R4 	@Add current array element to sum
-		ADD R0, R0, #4	@Increment address to reach next element
+		ADD R5, R5, #4	@Increment address to reach next element
 		CMP R1, R2		@Check if loop counter = lengt of array
 		BNE array_loop
 	MOV R0, R3
 	BX LR
 
-
-
-
 .data
-.align  4	@ necessary alignment
+.align 4	@ necessary alignment
+debugMessage: .asciz "Inside function\n"
+.align 4
 labelSum: .asciz   "Sum %d\n"
 .align  4	@ necessary alignment
 my_array: .word 12, 34, 54, 76, 89
