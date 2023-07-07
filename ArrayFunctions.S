@@ -13,10 +13,9 @@
 
 main:
 	BL	stdio_init_all	@ initialize uart or usb
-	LDR R5, =my_array
 	MOV R1, #5
 loop:
-	LDR R5, =my_array
+	LDR R0, =my_array
 	MOV R1, #5
 	BL sum
 	MOV R2, R0
@@ -26,29 +25,17 @@ loop:
 	B	loop			@ loop forever
 
 sum:	#Address of array in R0, length of array in R1
-	PUSH {LR}
-	LDR R0, =debugMessage
-	BL printf
-	LDR R0, =sleep_time
-	BL sleep_ms
-	
 	MOV R5, R0
 	MOV R2, #0	@R2 as loop counter
 	MOV R3, #0  @R3 used as sum
 	array_loop:
-		@LDR R0, =debugMessage
-		@BL printf
-		@LDR R0, =sleep_time
-		@BL sleep_ms
-
 		ADD R2, R2, #1 	@Increment loop counter
 		LDR R4,[R5]		@Load element into R4
-		ADD R3, R3, R4 	@Add current array element to sum
-		ADD R5, R5, #4	@Increment address to reach next element
-		CMP R1, R2		@Check if loop counter = lengt of array
+		ADD R3, R4 		@Add current array element to sum
+		ADD R5, #4		@Increment address to reach next element
+		CMP R1, R2 		@Check if loop counter = lengt of array
 		BNE array_loop
 	MOV R0, R3
-	POP {PC}
 	BX LR
 
 .data
